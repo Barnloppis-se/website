@@ -29,6 +29,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - env:
+        TOKEN: ${{ secrets.TOKEN }}
+
       - name: Checkout
         uses: actions/checkout@v4
       - name: Detect package manager
@@ -72,12 +75,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
-        run: |
-          echo "$TEST"
-          ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-        with:
-          TOKEN: ${{ secrets.TOKEN }}
-          TEST: ${{ vars.BACKEND }}
+        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
