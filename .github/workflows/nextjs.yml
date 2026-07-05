@@ -75,7 +75,7 @@ jobs:
         run: |
           echo "$TEST"
           ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-        env:
+        with:
           TOKEN: ${{ secrets.TOKEN }}
           TEST: ${{ vars.BACKEND }}
       - name: Build with Next.js
