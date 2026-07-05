@@ -2,7 +2,7 @@ declare global {
     namespace NodeJS {
         interface ProcessEnv {
             /**
-             * Barnloppis API backend URL
+             * Barnloppis server backend URL
              */
             readonly BACKEND: string
         }
