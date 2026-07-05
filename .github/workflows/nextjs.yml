@@ -73,7 +73,7 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: |
-          echo $TEST
+          echo "$TEST"
           ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
         env:
           TOKEN: ${{ secrets.TOKEN }}
