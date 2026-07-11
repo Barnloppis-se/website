@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 /**
  * Dropdown menu props
  */
-export interface Props<T> {
+interface Props<T> {
     /**
      * Dropdown label
      */
