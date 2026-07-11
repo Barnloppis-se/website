@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@barnloppis-se/api": "^1.0.2",
+    "@barnloppis/types": "github:Barnloppis-se/types",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -27,6 +28,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^6"
   }
 }
