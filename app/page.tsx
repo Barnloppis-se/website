@@ -1,4 +1,5 @@
 "use client"
+import Dropbox from "@/components/ui/Dropbox";
 import Dropdown from "@/components/ui/Dropdown";
 import NumberField from "@/components/ui/NumberField";
 import { Item, TAGS, tags } from "@barnloppis-se/types/dist/src/upload/uploadData";
@@ -39,6 +40,7 @@ export default function Home() {
 
 
                 {/* Image input */}
+                <Dropbox />
 
 
 
