@@ -1,11 +1,11 @@
 import { Box, FormLabel } from "@mui/material";
-import { Component, RefAttributes } from "react";
+import { Component } from "react";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 /**
  * Dropbox properties
  */
-interface Props extends RefAttributes<Dropbox> {
+interface Props {
     /**
      * List of accepted file formats
      *
@@ -45,19 +45,6 @@ interface Props extends RefAttributes<Dropbox> {
     readonly onChange?: (files: File[]) => void
 }
 
-/**
- * Dropbox state
- */
-interface State {
-    /**
-     * List of files
-     *
-     * This contains all files that have been
-     * selected by the input.
-     */
-    readonly files: File[]
-}
-
 
 
 /**
@@ -66,7 +53,7 @@ interface State {
  * Dropbox - provides file upload input
  * for multiple files or one.
  */
-export default class Dropbox extends Component<Props, State> {
+export default class Dropbox extends Component<Props> {
     /**
      * File formats accepted by this input
      */
@@ -84,13 +71,6 @@ export default class Dropbox extends Component<Props, State> {
      * it is added to the state list of files.
      */
     private readonly validate: (value: File) => boolean;
-
-    /**
-     * Dropbox state object
-     */
-    state: Readonly<State> = {
-        files: []
-    }
 
 
 
@@ -117,39 +97,10 @@ export default class Dropbox extends Component<Props, State> {
                     const file = e.target.files[i];
                     if(this.validate(file)) list.push(file);
                 }
-                this.pushFiles(list, this.props.onChange);
+                if(this.props.onChange) this.props.onChange(list);
             }} id="dropzone-file" type="file" className="hidden" multiple={this.props.multiple} accept={this.accepts} />
         </FormLabel>
     </Box>);
-
-
-
-    /**
-     * Pushes files into list of files
-     *
-     * The `done` callback is called when the
-     * operation has been completed.
-     *
-     * @param file File to push
-     * @param done Callback for when the operation is done
-     */
-    public pushFiles = (file: File[], done?: (files: File[]) => void) => {
-        this.setState(prev => ({
-            files: [...prev.files, ...file]
-        }), () => {if(done) done(this.state.files)});
-    }
-
-    /**
-     * Removes file from dropbox state
-     *
-     * @param file File to remove
-     * @param done Callback when the state has updated
-     */
-    public remove = (file: File, done?: (files: File[]) => void) => {
-        this.setState(prev => ({
-            files: prev.files.toSpliced(prev.files.indexOf(file), 1)
-        }), () => {if(done) done(this.state.files)});
-    }
 
 
 
