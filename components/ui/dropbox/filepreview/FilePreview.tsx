@@ -1,7 +1,8 @@
-import { Box, ImageList, ImageListItem } from "@mui/material";
+import { Box, Grid, ImageList, ImageListItem } from "@mui/material";
 import { Component, ContextType, createContext, ReactNode, RefAttributes, useContext } from "react";
 import FilePreviewControls, { FilePreviewControlProps } from "./FilePreviewControls";
 import Dropbox, { DropboxProps } from "../Dropbox";
+import { Delete } from "@mui/icons-material";
 
 /**
  * File preview properties
@@ -40,6 +41,11 @@ interface State {
      * List of files
      */
     readonly files: File[]
+
+    /**
+     * File object hovering status
+     */
+    readonly hovers: {[id: number]: boolean}
 }
 
 
@@ -70,14 +76,15 @@ export default class FilePreview extends Component<Props, State> {
 
 
 
-    static contextType = createContext<State>({ files: [] });
+    static contextType = createContext<State>({ files: [], hovers: [] });
     context!: ContextType<typeof FilePreview.contextType>;
 
     /**
      * File preview state
      */
     state: Readonly<State> = {
-        files: []
+        files: [],
+        hovers: [],
     }
 
 
@@ -86,20 +93,80 @@ export default class FilePreview extends Component<Props, State> {
         <FilePreview.contextType.Provider value={this.state}>
             <Box className="w-full h-fit">{this.props.children}</Box>
             <Box className="flex w-full h-fit pt-3">
-                <ImageList className="w-4/5 h-fit min-h-36 m-auto overflow-y-visible" variant="quilted" cols={5} rowHeight={121}>
+                <Grid className="w-4/5 h-fit min-h-36 m-auto overflow-y-visible" container spacing={2}>
                     {this.state.files.map(file => <ImageListItem key={this.state.files.indexOf(file)} cols={1} rows={1}>
-                        <img
-                            src={URL.createObjectURL(file)}
-                            alt={`${file.webkitRelativePath}/${file.name}`}
-                            loading="lazy"
-                        />
+                        <div
+                            className="flex"
+                            onMouseOver={e => {
+                                e.preventDefault();
+                                this.hover(file);
+                            }}
+                            onMouseOut={e => {
+                                e.preventDefault();
+                                this.stopHover(file);
+                            }}
+                            onClick={e => {
+                                e.preventDefault();
+                                this.remove(file);
+                            }}
+                        >
+                            <img
+                                src={URL.createObjectURL(file)}
+                                alt={`${file.webkitRelativePath}/${file.name}`}
+                                loading="lazy"
+                                className={this.isHovering(file) ? "blur-sm" : ""}
+                            />
+                            {this.isHovering(file) && <div className="w-full h-full absolute flex">
+                                <div className="m-auto">
+                                    <Delete className="size-24" color="error" fontSize="large" />
+                                </div>
+                            </div>}
+                        </div>
                     </ImageListItem>)}
-                </ImageList>
+                </Grid>
             </Box>
         </FilePreview.contextType.Provider>
     </Box>);
 
 
+
+    /**
+     * Updates hover status over file object
+     *
+     * @param file File to hover
+     */
+    public hover = (file: File) => {
+        const hover = this.state.hovers;
+        hover[this.state.files.indexOf(file)] = true;
+
+        this.setState(prev => ({
+            files: prev.files,
+            hovers: hover,
+        }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
+    }
+
+    /**
+     * Checks if currently hovering over set file
+     *
+     * @param file File to check
+     * @returns Hovering status
+     */
+    public isHovering = (file: File) => this.state.hovers[this.state.files.indexOf(file)];
+
+    /**
+     * Stops hover over file object
+     *
+     * @param file File to stop hover over
+     */
+    public stopHover = (file: File) => {
+        const hover = this.state.hovers;
+        hover[this.state.files.indexOf(file)] = false;
+
+        this.setState(prev => ({
+            files: prev.files,
+            hovers: hover,
+        }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
+    }
 
     /**
      * Adds `files` to state and calls `onChange` when the
@@ -109,7 +176,8 @@ export default class FilePreview extends Component<Props, State> {
      */
     public add = (files: File[]) => {
         this.setState(prev => ({
-            files: [...prev.files, ...files]
+            files: [...prev.files, ...files],
+            hovers: [],
         }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
     }
 
@@ -121,7 +189,8 @@ export default class FilePreview extends Component<Props, State> {
      */
     public remove = (file: File) => {
         this.setState(prev => ({
-            files: prev.files.toSpliced(prev.files.indexOf(file), 1)
+            files: prev.files.toSpliced(prev.files.indexOf(file), 1),
+            hovers: [],
         }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
     }
 
@@ -137,7 +206,8 @@ export default class FilePreview extends Component<Props, State> {
      */
     public reset = () => {
         this.setState(prev => ({
-            files: []
+            files: [],
+            hovers: [],
         }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
     }
 }
