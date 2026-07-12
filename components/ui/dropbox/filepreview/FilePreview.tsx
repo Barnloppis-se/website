@@ -14,6 +14,22 @@ interface Props extends RefAttributes<FilePreview> {
      * for file input usage.
      */
     readonly children: ReactNode
+
+    /**
+     * State change event callback
+     *
+     * This is called when the
+     * state changes.
+     *
+     * If the file preview is updated
+     * (files added, removed or reset)
+     * then this is called with.
+     * The `files` parameter is the new
+     * state file list.
+     *
+     * @param files List of files
+     */
+    readonly onChange?: (files: File[]) => void;
 }
 
 /**
@@ -86,29 +102,27 @@ export default class FilePreview extends Component<Props, State> {
 
 
     /**
-     * Adds `files` to state and calls `done` when the
+     * Adds `files` to state and calls `onChange` when the
      * process is finished.
      *
      * @param files Files to add to state
-     * @param done Callback for operation finished event
      */
-    public add = (files: File[], done?: (files: File[]) => void) => {
+    public add = (files: File[]) => {
         this.setState(prev => ({
             files: [...prev.files, ...files]
-        }), () => {if(done) done(this.state.files)});
+        }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
     }
 
     /**
-     * Removes `file` from state and calls `done`
+     * Removes `file` from state and calls `onChange`
      * when the operation is finished.
      *
      * @param file File to remove
-     * @param done Callback for operation finished event
      */
-    public remove = (file: File, done?: (files: File[]) => void) => {
+    public remove = (file: File) => {
         this.setState(prev => ({
             files: prev.files.toSpliced(prev.files.indexOf(file), 1)
-        }), () => {if(done) done(this.state.files)});
+        }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
     }
 
     /**
@@ -118,12 +132,13 @@ export default class FilePreview extends Component<Props, State> {
      * selected and call the callback when
      * the operation has finished its task
      *
-     * @param done Callback
+     * The callback called is the
+     * `onChange` callback.
      */
-    public reset = (done?: (files: File[]) => void) => {
+    public reset = () => {
         this.setState(prev => ({
             files: []
-        }), () => {if(done) done(this.state.files)});
+        }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
     }
 }
 
