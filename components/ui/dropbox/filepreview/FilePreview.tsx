@@ -1,5 +1,7 @@
 import { Box, ImageList, ImageListItem } from "@mui/material";
 import { Component, ContextType, createContext, ReactNode, RefAttributes, useContext } from "react";
+import FilePreviewControls, { FilePreviewControlProps } from "./FilePreviewControls";
+import Dropbox, { DropboxProps } from "../Dropbox";
 
 /**
  * File preview properties
@@ -33,6 +35,25 @@ interface State {
  * over files from the `Dropbox` component.
  */
 export default class FilePreview extends Component<Props, State> {
+    /**
+     * File preview controls component
+     *
+     * This can be used to assign global
+     * controls to the file preview component.
+     */
+    declare static Controls: (props: FilePreviewControlProps) => ReactNode;
+
+    /**
+     * Dropbox component
+     *
+     * This can be used to upload and
+     * select files for a `FilePreview`
+     * state instance.
+     */
+    declare static Dropbox: (props: DropboxProps) => ReactNode;
+
+
+
     static contextType = createContext<FilePreview>(new FilePreview({children: null}));
 
     /**
@@ -107,3 +128,8 @@ export default class FilePreview extends Component<Props, State> {
  * @returns File preview context
  */
 export const useFilePreview = () => useContext(FilePreview.contextType);
+
+
+
+FilePreview.Controls = FilePreviewControls;
+FilePreview.Dropbox = Dropbox;
