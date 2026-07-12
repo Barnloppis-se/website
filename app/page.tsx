@@ -1,9 +1,10 @@
 "use client"
-import Dropbox from "@/components/ui/Dropbox";
+import Dropbox from "@/components/ui/dropbox/Dropbox";
+import FilePreview from "@/components/ui/dropbox/filepreview/FilePreview";
 import Dropdown from "@/components/ui/Dropdown";
 import NumberField from "@/components/ui/NumberField";
 import { Item, TAGS, tags } from "@barnloppis-se/types/dist/src/upload/uploadData";
-import { Button, FormControl } from "@mui/material";
+import { Box, Button, FormControl } from "@mui/material";
 import { useRef, useState } from "react";
 
 export default function Home() {
@@ -15,7 +16,7 @@ export default function Home() {
     }
 
     const [ seller, setSeller ] = useState<number | undefined>();
-    const dropbox = useRef(null);
+    const images = useRef<FilePreview>(null);
 
 
 
@@ -41,23 +42,19 @@ export default function Home() {
 
 
                 {/* Image input */}
-                <Dropbox
-                    ref={dropbox}
-                    onChange={console.log}
-                    multiple
-                    accepts={["png", "jpg", "jpeg"]}
-                    onValidateFile={file => {
+                <FilePreview ref={images}>
+                    <FilePreview.Dropbox
+                        multiple
+                        accepts={["png", "jpg", "jpeg"]}
+                        onValidateFile={file => {
+                            const valid = ["image/png", "image/jpg", "image/jpeg"];
+                            return valid.includes(file.type);
+                        }}
+                    />
+                    <FilePreview.Controls />
+                </FilePreview>
 
-
-
-                        console.log(dropbox);
-
-
-                        const valid = ["image/png", "image/jpg", "image/jpeg"];
-                        return valid.includes(file.type);
-                    }}
-                />
-                {/* {images.current.map(value => <div
+                {/* {dropbox.current && dropbox.current.state.files.map(value => <div
                     key={value.name}
                     className="w-full h-fit bg-amber-900"
                 >

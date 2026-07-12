@@ -1,5 +1,5 @@
 import { Box, ImageList, ImageListItem } from "@mui/material";
-import { Component, ContextType, createContext, ReactNode, RefAttributes, useContext } from "react";
+import { Component, createContext, ReactNode, RefAttributes, useContext } from "react";
 import FilePreviewControls, { FilePreviewControlProps } from "./FilePreviewControls";
 import Dropbox, { DropboxProps } from "../Dropbox";
 
