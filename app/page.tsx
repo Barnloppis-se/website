@@ -4,7 +4,7 @@ import Dropdown from "@/components/ui/Dropdown";
 import NumberField from "@/components/ui/NumberField";
 import { Item, TAGS, tags } from "@barnloppis-se/types/dist/src/upload/uploadData";
 import { Button, FormControl } from "@mui/material";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function Home() {
     const [ tag, setTag ] = useState<keyof typeof TAGS>("Omärkt");
@@ -15,6 +15,7 @@ export default function Home() {
     }
 
     const [ seller, setSeller ] = useState<number | undefined>();
+    const dropbox = useRef(null);
 
 
 
@@ -40,7 +41,28 @@ export default function Home() {
 
 
                 {/* Image input */}
-                <Dropbox />
+                <Dropbox
+                    ref={dropbox}
+                    onChange={console.log}
+                    multiple
+                    accepts={["png", "jpg", "jpeg"]}
+                    onValidateFile={file => {
+
+
+
+                        console.log(dropbox);
+
+
+                        const valid = ["image/png", "image/jpg", "image/jpeg"];
+                        return valid.includes(file.type);
+                    }}
+                />
+                {/* {images.current.map(value => <div
+                    key={value.name}
+                    className="w-full h-fit bg-amber-900"
+                >
+                    {value.name}
+                </div>)} */}
 
 
 

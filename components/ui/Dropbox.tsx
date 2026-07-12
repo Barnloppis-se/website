@@ -1,11 +1,11 @@
 import { Box, FormLabel } from "@mui/material";
-import { Component } from "react";
+import { Component, createRef, RefAttributes } from "react";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 /**
  * Dropbox properties
  */
-interface Props {
+interface Props extends RefAttributes<{ test: () => void }> {
     /**
      * List of accepted file formats
      *
@@ -98,6 +98,11 @@ export default class Dropbox extends Component<Props, State> {
         super(props);
         [ this.accepts, this.helpers ] = Dropbox.getFormats(props.accepts ?? [ "image/*" ]);
         this.validate = props.onValidateFile ?? (file => true);
+
+
+        const ref = createRef<{ test: () => void }>();
+        ref.current = { test: () => { console.log("Test"); } };
+        props.ref = ref;
     }
 
 
