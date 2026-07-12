@@ -1,5 +1,4 @@
 "use client"
-import Dropbox from "@/components/ui/dropbox/Dropbox";
 import FilePreview from "@/components/ui/dropbox/filepreview/FilePreview";
 import Dropdown from "@/components/ui/Dropdown";
 import NumberField from "@/components/ui/NumberField";
@@ -16,71 +15,77 @@ export default function Home() {
     }
 
     const [ seller, setSeller ] = useState<number | undefined>();
-    const images = useRef<FilePreview>(null);
-
-
+    const filePreview = useRef<FilePreview>(null);
 
     return (
-        <div className="flex flex-wrap m-auto">
-            <FormControl className="bg-amber-50 w-3xs h-fit">
-                <Dropdown<keyof typeof TAGS>
-                    label="Välj fel"
-                    onSelect={onTag}
-                    default={"Omärkt"}
-                    values={tags as (keyof typeof TAGS)[]}
-                />
+        <div className="w-full flex flex-wrap">
+            <FormControl className="bg-amber-50 w-4/5 h-fit m-auto flex flex-wrap">
+                <Box className="flex h-fit ml-32">
+                    <div className="mt-4 mr-12">
+                        <Dropdown<keyof typeof TAGS>
+                            label="Välj fel"
+                            onSelect={onTag}
+                            default={"Omärkt"}
+                            values={tags as (keyof typeof TAGS)[]}
+                        />
+                    </div>
+                    {tag != "Omärkt" && <div className="w-fit h-fit">
+                        <NumberField
+                            label="Säljare"
+                            size="medium"
+                            onChange={setSeller}
+                            values={{ min: 1, default: 1 }}
+                        />
+                    </div>}
+                </Box>
 
-                {tag != "Omärkt" && <div className="w-fit h-fit">
-                    <NumberField
-                        label="Säljare"
-                        size="medium"
-                        onChange={setSeller}
-                        values={{ min: 1, default: 1 }}
-                    />
-                </div>}
+                <Box className="w-4/5 py-10 m-auto">
+                    <FilePreview ref={filePreview}>
+                        <FilePreview.Dropbox
+                            ref={filePreview}
+                            multiple
+                            accepts={["png", "jpg", "jpeg"]}
+                            onValidateFile={file => {
+                                const valid = ["image/png", "image/jpg", "image/jpeg"];
+                                return valid.includes(file.type);
+                            }}
+                        />
+                        <FilePreview.Controls ref={filePreview} />
+                    </FilePreview>
+                </Box>
+                <Box className="w-4/5 flex m-auto mt-3 border-solid border-t-2 border-bs-neutral-500">
+                    <Box className="w-fit h-fit m-auto my-7">
+                        <Button
+                            className="min-w-2xs"
+                            variant="outlined"
+                            size="large"
+                            onClick={e => {
+                                e.preventDefault();
+
+                                if(filePreview.current?.state.files.length === 0) {
+                                    console.log("Can't upload empty threat");
+
+                                    // Display error
+
+                                    return;
+                                }
 
 
 
-                {/* Image input */}
-                <FilePreview ref={images}>
-                    <FilePreview.Dropbox
-                        multiple
-                        accepts={["png", "jpg", "jpeg"]}
-                        onValidateFile={file => {
-                            const valid = ["image/png", "image/jpg", "image/jpeg"];
-                            return valid.includes(file.type);
-                        }}
-                    />
-                    <FilePreview.Controls />
-                </FilePreview>
+                                // Upload item
 
-                {/* {dropbox.current && dropbox.current.state.files.map(value => <div
-                    key={value.name}
-                    className="w-full h-fit bg-amber-900"
-                >
-                    {value.name}
-                </div>)} */}
+                                // Upload compressed version of image
 
+                                const item: Item = {
+                                    tag,
+                                    seller
+                                }
 
-
-                <Button
-                    variant="outlined"
-                    size="medium"
-                    // disabled={(() => {
-                    //     const dis = (seller && tag != "Omärkt") == false;
-                    //     return dis;
-                    // })()}
-                    onClick={e => {
-                        e.preventDefault();
-
-                        const item: Item = {
-                            tag,
-                            seller
-                        }
-
-                        console.log(item)
-                    }}
-                >Ladda upp</Button>
+                                console.log(item);
+                            }}
+                        >Ladda upp</Button>
+                    </Box>
+                </Box>
             </FormControl>
         </div>
     );
