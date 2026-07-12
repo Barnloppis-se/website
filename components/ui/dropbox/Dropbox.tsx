@@ -1,12 +1,17 @@
 import { Box, FormLabel } from "@mui/material";
-import { ReactNode } from "react";
+import { ReactNode, RefObject } from "react";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useFilePreview } from "./filepreview/FilePreview";
+import FilePreview from "./filepreview/FilePreview";
 
 /**
  * Dropbox properties
  */
 export interface DropboxProps {
+    /**
+     * File preview instance
+     */
+    readonly ref?: RefObject<FilePreview | null>
+
     /**
      * List of accepted file formats
      *
@@ -55,8 +60,6 @@ export interface DropboxProps {
  * for multiple files or one.
  */
 export default function Dropbox (props: DropboxProps): ReactNode {
-    const context = useFilePreview();
-
     const [ accepts, helpers ] = getFormats(props.accepts ?? [ "image/*" ]);
     const validate = props.onValidateFile ?? (file => true);
 
@@ -76,7 +79,7 @@ export default function Dropbox (props: DropboxProps): ReactNode {
                     if(validate(file)) list.push(file);
                 }
                 if(props.onChange) props.onChange(list);
-                else context.add(list);
+                else if(props.ref?.current) props.ref?.current.add(list);
             }} id="dropzone-file" type="file" className="hidden" multiple={props.multiple} accept={accepts} />
         </FormLabel>
     </Box>);

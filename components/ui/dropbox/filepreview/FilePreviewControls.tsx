@@ -1,11 +1,16 @@
+"use client"
 import { Box, Button } from "@mui/material";
-import { ReactNode } from "react";
-import { useFilePreview } from "./FilePreview";
+import { ReactNode, RefObject, useEffect, useState } from "react";
+import FilePreview, { useFilePreview } from "./FilePreview";
 
 /**
  * File preview controls properties
  */
 export interface FilePreviewControlProps {
+    /**
+     * File preview instance
+     */
+    readonly ref?: RefObject<FilePreview | null>
 }
 
 
@@ -15,14 +20,19 @@ export interface FilePreviewControlProps {
  */
 export default function FilePreviewControls(props: FilePreviewControlProps) : ReactNode {
     const preview = useFilePreview();
+    const [ disabled, setDisabled ] = useState(false);
+
+    useEffect(() => {
+        setDisabled(preview.files.length === 0);
+    }, [preview]);
 
     return(<Box>
         <Button
             onClick={e => {
                 e.preventDefault();
-                preview.reset();
+                if(props.ref?.current) props.ref?.current.reset();
             }}
-            disabled={preview.state.files.length == 0}
+            disabled={disabled}
             variant="outlined" color="error">Rensa</Button>
     </Box>);
 }

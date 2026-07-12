@@ -1,5 +1,5 @@
 import { Box, ImageList, ImageListItem } from "@mui/material";
-import { Component, createContext, ReactNode, RefAttributes, useContext } from "react";
+import { Component, ContextType, createContext, ReactNode, RefAttributes, useContext } from "react";
 import FilePreviewControls, { FilePreviewControlProps } from "./FilePreviewControls";
 import Dropbox, { DropboxProps } from "../Dropbox";
 
@@ -54,7 +54,8 @@ export default class FilePreview extends Component<Props, State> {
 
 
 
-    static contextType = createContext<FilePreview>(new FilePreview({children: null}));
+    static contextType = createContext<State>({ files: [] });
+    context!: ContextType<typeof FilePreview.contextType>;
 
     /**
      * File preview state
@@ -66,10 +67,10 @@ export default class FilePreview extends Component<Props, State> {
 
 
     render = () => (<Box>
-        <FilePreview.contextType.Provider value={this}>
+        <FilePreview.contextType.Provider value={this.state}>
             <Box className="w-full h-fit">{this.props.children}</Box>
             <ImageList>
-                {this.state.files.map(file => <ImageListItem key={file.webkitRelativePath}>
+                {this.state.files.map(file => <ImageListItem key={`${file.webkitRelativePath}/${file.name}`}>
                     <img src={file} alt={file.name} loading="lazy" />
                 </ImageListItem>)}
             </ImageList>
