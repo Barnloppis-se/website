@@ -1,12 +1,12 @@
 import { Box, FormLabel } from "@mui/material";
-import { Component, Context, ContextType } from "react";
+import { ReactNode } from "react";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import FilePreview from "./filepreview/FilePreview";
+import { useFilePreview } from "./filepreview/FilePreview";
 
 /**
  * Dropbox properties
  */
-interface Props {
+export interface DropboxProps {
     /**
      * List of accepted file formats
      *
@@ -54,44 +54,18 @@ interface Props {
  * Dropbox - provides file upload input
  * for multiple files or one.
  */
-export default class Dropbox extends Component<Props> {
-    static contextType = FilePreview.contextType;
-    context!: ContextType<typeof FilePreview.contextType>
+export default function Dropbox (props: DropboxProps): ReactNode {
+    const context = useFilePreview();
 
-    /**
-     * File formats accepted by this input
-     */
-    private readonly accepts: string;
+    const [ accepts, helpers ] = getFormats(props.accepts ?? [ "image/*" ]);
+    const validate = props.onValidateFile ?? (file => true);
 
-    /**
-     * Helper label for file input
-     */
-    private readonly helpers: string;
-
-    /**
-     * Validates file
-     *
-     * If the file is valid ( `true` ) then
-     * it is added to the state list of files.
-     */
-    private readonly validate: (value: File) => boolean;
-
-
-
-    constructor(props: Props) {
-        super(props);
-        [ this.accepts, this.helpers ] = Dropbox.getFormats(props.accepts ?? [ "image/*" ]);
-        this.validate = props.onValidateFile ?? (file => true);
-    }
-
-
-
-    render = () => (<Box className="flex items-center justify-center w-full">
+    return (<Box className="flex items-center justify-center w-full">
         <FormLabel htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">
             <div className="flex flex-col items-center justify-center text-body pt-5 pb-6">
                 <CloudUploadIcon fontSize="large" />
                 <p className="mb-2 text-sm"><span className="font-semibold">Ladda upp</span> eller släpp bild över fältet</p>
-                <p className="text-xs">{this.helpers}</p>
+                <p className="text-xs">{helpers}</p>
             </div>
 
             <input onChange={e => {
@@ -99,54 +73,54 @@ export default class Dropbox extends Component<Props> {
                 const list = [];
                 if(e.target.files) for(let i = 0; i < e.target.files.length; i++) {
                     const file = e.target.files[i];
-                    if(this.validate(file)) list.push(file);
+                    if(validate(file)) list.push(file);
                 }
-                if(this.props.onChange) this.props.onChange(list);
-                else this.context.add(list);
-            }} id="dropzone-file" type="file" className="hidden" multiple={this.props.multiple} accept={this.accepts} />
+                if(props.onChange) props.onChange(list);
+                else context.add(list);
+            }} id="dropzone-file" type="file" className="hidden" multiple={props.multiple} accept={accepts} />
         </FormLabel>
     </Box>);
+}
 
 
 
 
 
-    /**
-     * Gets help label string from format
-     *
-     * @param format File format ( extension ) type
-     * @returns Helper label string of format
-     */
-    public static getHelperLabelString = (format: string) => {
-        if(format.toLowerCase() === "image/*") return "GIF, PNG, JPG, JPEG";
-        return `${format.toUpperCase()}`;
+/**
+ * Gets help label string from format
+ *
+ * @param format File format ( extension ) type
+ * @returns Helper label string of format
+ */
+const getHelperLabelString = (format: string) => {
+    if(format.toLowerCase() === "image/*") return "GIF, PNG, JPG, JPEG";
+    return `${format.toUpperCase()}`;
+}
+
+/**
+ * Gets accept string from format
+ *
+ * @param format File format ( extension ) type
+ * @returns Accepts string of format
+ */
+const getAcceptsString = (format: string) => {
+    if(format.toLowerCase() === "image/*") return format
+    return `.${format.toLowerCase()}`;
+}
+
+/**
+ * Gets formats acceptor and helper labels
+ *
+ * @param formats File formats ( extensions )
+ * @returns Accepted formats and helper labels for dropbox and file inputs
+ */
+const getFormats = (formats: string[]) => {
+    let accepts = "";
+    let helpers = "";
+    for(const index in formats) {
+        const format = formats[index];
+        helpers = `${helpers ? helpers + "," : ""} ${getHelperLabelString(format)}`.trim();
+        accepts = `${accepts} ${getAcceptsString(format)}`.trim();
     }
-
-    /**
-     * Gets accept string from format
-     *
-     * @param format File format ( extension ) type
-     * @returns Accepts string of format
-     */
-    public static getAcceptsString = (format: string) => {
-        if(format.toLowerCase() === "image/*") return format
-        return `.${format.toLowerCase()}`;
-    }
-
-    /**
-     * Gets formats acceptor and helper labels
-     *
-     * @param formats File formats ( extensions )
-     * @returns Accepted formats and helper labels for dropbox and file inputs
-     */
-    public static getFormats = (formats: string[]) => {
-        let accepts = "";
-        let helpers = "";
-        for(const index in formats) {
-            const format = formats[index];
-            helpers = `${helpers ? helpers + "," : ""} ${this.getHelperLabelString(format)}`.trim();
-            accepts = `${accepts} ${this.getAcceptsString(format)}`.trim();
-        }
-        return [ accepts, helpers ];
-    }
+    return [ accepts, helpers ];
 }
