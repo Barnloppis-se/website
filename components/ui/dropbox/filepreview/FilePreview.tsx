@@ -1,4 +1,4 @@
-import { Box, Grid, ImageList, ImageListItem } from "@mui/material";
+import { Box, ImageList, ImageListItem } from "@mui/material";
 import { Component, ContextType, createContext, ReactNode, RefAttributes, useContext } from "react";
 import FilePreviewControls, { FilePreviewControlProps } from "./FilePreviewControls";
 import Dropbox, { DropboxProps } from "../Dropbox";
@@ -93,10 +93,9 @@ export default class FilePreview extends Component<Props, State> {
         <FilePreview.contextType.Provider value={this.state}>
             <Box className="w-full h-fit">{this.props.children}</Box>
             <Box className="flex w-full h-fit pt-3">
-                <Grid className="w-4/5 h-fit min-h-36 m-auto overflow-y-visible" container spacing={2}>
-                    {this.state.files.map(file => <ImageListItem key={this.state.files.indexOf(file)} cols={1} rows={1}>
-                        <div
-                            className="flex"
+                <ImageList className="w-4/5 h-fit min-h-36 m-auto overflow-y-visible" variant="masonry" cols={3} gap={8}>
+                    {this.state.files.map(file => <ImageListItem key={this.state.files.indexOf(file)}>
+                        <div className="flex size-full"
                             onMouseOver={e => {
                                 e.preventDefault();
                                 this.hover(file);
@@ -107,7 +106,7 @@ export default class FilePreview extends Component<Props, State> {
                             }}
                             onClick={e => {
                                 e.preventDefault();
-                                this.remove(file);
+                                if(this.isHovering(file)) this.remove(file);
                             }}
                         >
                             <img
@@ -116,14 +115,14 @@ export default class FilePreview extends Component<Props, State> {
                                 loading="lazy"
                                 className={this.isHovering(file) ? "blur-sm" : ""}
                             />
-                            {this.isHovering(file) && <div className="w-full h-full absolute flex">
-                                <div className="m-auto">
-                                    <Delete className="size-24" color="error" fontSize="large" />
+                            {this.isHovering(file) && <div className="absolute flex size-full">
+                                <div className="size-fit m-auto">
+                                    <Delete className="size-16" color="error" fontSize="large" />
                                 </div>
                             </div>}
                         </div>
                     </ImageListItem>)}
-                </Grid>
+                </ImageList>
             </Box>
         </FilePreview.contextType.Provider>
     </Box>);
