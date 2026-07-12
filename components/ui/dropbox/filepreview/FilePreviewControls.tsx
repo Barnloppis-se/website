@@ -26,7 +26,7 @@ export default function FilePreviewControls(props: FilePreviewControlProps) : Re
         setDisabled(preview.files.length === 0);
     }, [preview]);
 
-    return(<Box>
+    return(<Box className="m-1.5">
         <Button
             onClick={e => {
                 e.preventDefault();
