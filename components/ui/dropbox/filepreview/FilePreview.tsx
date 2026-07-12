@@ -69,13 +69,19 @@ export default class FilePreview extends Component<Props, State> {
     render = () => (<Box>
         <FilePreview.contextType.Provider value={this.state}>
             <Box className="w-full h-fit">{this.props.children}</Box>
-            <ImageList>
-                {this.state.files.map(file => <ImageListItem key={`${file.webkitRelativePath}/${file.name}`}>
-                    <img src={file} alt={file.name} loading="lazy" />
-                </ImageListItem>)}
-            </ImageList>
+            <Box className="flex w-full h-fit pt-3">
+                <ImageList className="w-4/5 h-fit min-h-36 m-auto overflow-y-visible" variant="quilted" cols={5} rowHeight={121}>
+                    {this.state.files.map(file => <ImageListItem key={this.state.files.indexOf(file)} cols={1} rows={1}>
+                        <img
+                            src={URL.createObjectURL(file)}
+                            alt={`${file.webkitRelativePath}/${file.name}`}
+                            loading="lazy"
+                        />
+                    </ImageListItem>)}
+                </ImageList>
+            </Box>
         </FilePreview.contextType.Provider>
-    </Box>)
+    </Box>);
 
 
 
