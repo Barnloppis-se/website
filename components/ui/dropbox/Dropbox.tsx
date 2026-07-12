@@ -64,7 +64,7 @@ export default function Dropbox (props: DropboxProps): ReactNode {
     const validate = props.onValidateFile ?? (file => true);
 
     return (<Box className="flex items-center justify-center w-full">
-        <FormLabel htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-base cursor-pointer hover:bg-neutral-tertiary-medium">
+        <FormLabel htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 bg-neutral-secondary-medium border border-dashed border-default-strong rounded-md cursor-pointer hover:bg-neutral-tertiary-medium">
             <div className="flex flex-col items-center justify-center text-body pt-5 pb-6">
                 <CloudUploadIcon fontSize="large" />
                 <p className="mb-2 text-sm"><span className="font-semibold">Ladda upp</span> eller släpp bild över fältet</p>
