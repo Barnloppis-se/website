@@ -1,11 +1,11 @@
 import { Box, FormLabel } from "@mui/material";
-import { Component, createRef, RefAttributes } from "react";
+import { Component, RefAttributes } from "react";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 /**
  * Dropbox properties
  */
-interface Props extends RefAttributes<{ test: () => void }> {
+interface Props extends RefAttributes<Dropbox> {
     /**
      * List of accepted file formats
      *
@@ -98,11 +98,6 @@ export default class Dropbox extends Component<Props, State> {
         super(props);
         [ this.accepts, this.helpers ] = Dropbox.getFormats(props.accepts ?? [ "image/*" ]);
         this.validate = props.onValidateFile ?? (file => true);
-
-
-        const ref = createRef<{ test: () => void }>();
-        ref.current = { test: () => { console.log("Test"); } };
-        props.ref = ref;
     }
 
 
@@ -141,6 +136,18 @@ export default class Dropbox extends Component<Props, State> {
     public pushFiles = (file: File[], done?: (files: File[]) => void) => {
         this.setState(prev => ({
             files: [...prev.files, ...file]
+        }), () => {if(done) done(this.state.files)});
+    }
+
+    /**
+     * Removes file from dropbox state
+     *
+     * @param file File to remove
+     * @param done Callback when the state has updated
+     */
+    public remove = (file: File, done?: (files: File[]) => void) => {
+        this.setState(prev => ({
+            files: prev.files.toSpliced(prev.files.indexOf(file), 1)
         }), () => {if(done) done(this.state.files)});
     }
 
