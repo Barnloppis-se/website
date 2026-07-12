@@ -1,6 +1,7 @@
 import { Box, FormLabel } from "@mui/material";
-import { Component } from "react";
+import { Component, Context, ContextType } from "react";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import FilePreview from "./filepreview/FilePreview";
 
 /**
  * Dropbox properties
@@ -54,6 +55,9 @@ interface Props {
  * for multiple files or one.
  */
 export default class Dropbox extends Component<Props> {
+    static contextType = FilePreview.contextType;
+    context!: ContextType<typeof FilePreview.contextType>
+
     /**
      * File formats accepted by this input
      */
@@ -98,6 +102,7 @@ export default class Dropbox extends Component<Props> {
                     if(this.validate(file)) list.push(file);
                 }
                 if(this.props.onChange) this.props.onChange(list);
+                else this.context.add(list);
             }} id="dropzone-file" type="file" className="hidden" multiple={this.props.multiple} accept={this.accepts} />
         </FormLabel>
     </Box>);
