@@ -28,7 +28,7 @@ interface Props {
      * @param images Images uploaded to the form
      * @returns Reset status
      */
-    readonly onSubmit?: (item: Item, images: File[]) => boolean;
+    readonly onSubmit?: (item: Item, images: File[]) => Promise<boolean>;
 
     /**
      * Form input error event handler
@@ -108,17 +108,20 @@ export default function ItemForm(props: Props): ReactNode {
                             return;
                         }
 
-                        let reset = true;
                         if(props.onSubmit) {
                             const item: Item = { tag, seller };
                             const images: File[] = filePreview.current?.state.files ?? [];
-                            reset = props.onSubmit(item, images);
+                            props.onSubmit(item, images).then(res => {
+                                if(!res) return;
+                                filePreview.current?.reset();
+                                setSeller(1);
+                                setTag("Omärkt");
+                            });
+                        } else {
+                            filePreview.current?.reset();
+                            setSeller(1);
+                            setTag("Omärkt");
                         }
-                        if(!reset) return;
-
-                        filePreview.current?.reset();
-                        setSeller(1);
-                        setTag("Omärkt");
                     }}
                 >Ladda upp</Button>
             </Box>
