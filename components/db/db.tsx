@@ -1,8 +1,11 @@
+"use client"
 import { init } from "@barnloppis-se/api";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 export default function DBContext({ url, children }: Readonly<{url: string, children: ReactNode}>) : ReactNode {
-    init(url)
+    useEffect(() => {
+        init(url)
+    }, []);
 
     console.log("Connected to backend...")
 

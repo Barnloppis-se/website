@@ -27,7 +27,7 @@ export default function RootLayout({ children, }: Readonly<{children: React.Reac
         >
             <body className="w-full h-full">
                 <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-                    <DBContext url={process.env.BACKEND}>
+                    <DBContext url={process.env.NEXT_PUBLIC_BACKEND}>
                         <div className="flex m-0 w-full h-full">
                             {children}
                         </div>
