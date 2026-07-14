@@ -1,7 +1,7 @@
 "use client"
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import Image from "next/image";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 /**
  * Navigator context
@@ -83,3 +83,24 @@ export default function ApplicationNavigator(props: Props): ReactNode {
         </div>
     );
 }
+
+
+
+/**
+ * Navigator context
+ *
+ * The navigator can be used
+ * to change page and location.
+ *
+ * It is far from the only way but
+ * uses the `ApplicationNavigator`
+ * to set the location. Therefore
+ * providing the navbar with a way
+ * to know what location is the current.
+ *
+ * ```tsx
+ * const nav = useNavigator();
+ * nav.navigate("/"); // Sets location to home
+ * ```
+ */
+export const useNavigator = () => useContext(context);
