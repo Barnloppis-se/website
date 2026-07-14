@@ -1,7 +1,7 @@
 "use client"
-import { getItems } from "@barnloppis-se/api";
+import { getImage, getItems } from "@barnloppis-se/api";
 import { ItemObject } from "@barnloppis-se/types/dist/src/data/item";
-import { Box } from "@mui/material";
+import { Box, Card, CardActionArea, CardMedia } from "@mui/material";
 import { useEffect, useState } from "react";
 
 /**
@@ -20,7 +20,18 @@ export default function Images() {
     return(
         <Box>
             {items.map(item => <Box key={item.id}>
-                {item.tag}
+                <Card>
+                    <CardActionArea>
+                        <CardMedia>
+                            <img
+                                src={getImage(item.id, 0)}
+                                alt={`Bild på ${item.tag} plagg`}
+                                loading="lazy"
+                            />
+                        </CardMedia>
+                        {item.tag}
+                    </CardActionArea>
+                </Card>
             </Box>)}
         </Box>
     );
