@@ -23,7 +23,7 @@ export default function Home() {
     return (
         <div className="w-full flex flex-wrap">
             <ItemForm
-                className="w-4/5 h-fit m-auto flex flex-wrap"
+                className="w-4/5 h-fit mt-10 m-auto flex flex-wrap"
                 onError={error => {
                     setPopup({
                         title: error.cause,
