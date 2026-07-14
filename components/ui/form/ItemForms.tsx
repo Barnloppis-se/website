@@ -114,13 +114,9 @@ export default function ItemForm(props: Props): ReactNode {
                             props.onSubmit(item, images).then(res => {
                                 if(!res) return;
                                 filePreview.current?.reset();
-                                setSeller(1);
-                                setTag("Omärkt");
                             });
                         } else {
                             filePreview.current?.reset();
-                            setSeller(1);
-                            setTag("Omärkt");
                         }
                     }}
                 >Ladda upp</Button>
