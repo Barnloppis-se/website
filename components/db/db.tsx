@@ -4,10 +4,9 @@ import { ReactNode, useEffect } from "react";
 
 export default function DBContext({ url, children }: Readonly<{url: string, children: ReactNode}>) : ReactNode {
     useEffect(() => {
-        init(url)
+        init(url);
+        console.log("Connected to backend...");
     }, []);
-
-    console.log("Connected to backend...")
 
     return(
         <div className="w-full h-full">
