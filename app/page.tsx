@@ -73,7 +73,7 @@ export default function Home() {
                         message: <>Din rapport har laddats upp
                             och kan nu ses under <span className="bg-blue-100 rounded-sm underline hover:cursor-pointer px-2" style={{ paddingTop: "1px", paddingBottom: "1px" }} onClick={e => {
                                 e.preventDefault();
-                                navigator.navigate("/images")
+                                navigator.navigate("/items");
                             }}>Bilder</span></>,
 
                         canClose: true,
