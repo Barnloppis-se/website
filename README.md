@@ -9,7 +9,6 @@
 
 ## To do
 
-- Upload items
-- Image compression
 - Styling ( OMG! It really needs to be done or heaven ain't waiting )
 - Item viewing
+- Dynamic text
