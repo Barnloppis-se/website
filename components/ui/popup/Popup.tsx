@@ -68,7 +68,7 @@ export default function Popup(props: Props): ReactNode {
                     }}
                     disabled={props.canClose === false}
                     variant="outlined"
-                    color={props.type === "error" ? "error" : "secondary"}>Stäng</Button>
+                    color={props.type === "error" ? "error" : "primary"}>Stäng</Button>
             </Box>
         </Box>
     </Modal>);

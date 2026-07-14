@@ -1,4 +1,5 @@
 "use client"
+import { useNavigator } from "@/components/app/Navigator";
 import ItemForm from "@/components/ui/form/ItemForms";
 import Popup from "@/components/ui/popup/Popup";
 import { upload, uploadImage } from "@barnloppis-se/api";
@@ -6,6 +7,7 @@ import imageCompression, { Options } from "browser-image-compression";
 import { ReactNode, useState } from "react";
 
 export default function Home() {
+    const navigator = useNavigator();
     const [ popup, setPopup ] = useState<{
         title: string,
         message: ReactNode,
@@ -53,15 +55,31 @@ export default function Home() {
                         if(rm.status === false) errors++;
                     }
 
-                    if(errors !== 0) setPopup(setPopupError(
-                        "Ett fel uppstod",
-                        <>
-                            <span className="text-gray-900 font-mono font-semibold">[{errors}/{images.length}]</span> bilder laddades inte upp.
-                            Kolla din internetuppkoppling eller om bilden verkerligen är en bild av
-                            godkänt format. Ha en trevligt fortsatt dag och hoppas att problemet inte kvarstår!
-                        </>
-                    ));
+                    if(errors !== 0) {
+                        setPopup(setPopupError(
+                            "Ett fel uppstod",
+                            <>
+                                <span className="text-gray-900 font-mono font-semibold">[{errors}/{images.length}]</span> bilder laddades inte upp.
+                                Kolla din internetuppkoppling eller om bilden verkerligen är en bild av
+                                godkänt format. Ha en trevligt fortsatt dag och hoppas att problemet inte kvarstår!
+                            </>
+                        ));
+                        return false;
+                    }
 
+                    setPopup({
+                        title: "Uppladdat",
+
+                        message: <>Din rapport har laddats upp
+                            och kan nu ses under <span className="bg-blue-100 rounded-sm underline hover:cursor-pointer px-2" style={{ paddingTop: "1px", paddingBottom: "1px" }} onClick={e => {
+                                e.preventDefault();
+                                navigator.navigate("/images")
+                            }}>Bilder</span></>,
+
+                        canClose: true,
+                        error: false,
+                        show: true
+                    });
                     return true;
                 }}
             />
