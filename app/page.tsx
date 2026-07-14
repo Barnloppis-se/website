@@ -51,7 +51,7 @@ export default function Home() {
 
                     let errors = 0;
                     for(const image of await compressList(images)) {
-                        const rm = await uploadImage(res.item, image.stream());
+                        const rm = await uploadImage(res.item, image);
                         if(rm.status === false) errors++;
                     }
 
