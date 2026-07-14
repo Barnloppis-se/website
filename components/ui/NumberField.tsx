@@ -35,6 +35,11 @@ interface Props {
     readonly max?: number
 
     /**
+     * Current value
+     */
+    readonly value?: number
+
+    /**
      * Field value settings
      */
     readonly values?: {
@@ -71,6 +76,7 @@ export default function NumberField(args: Props) : ReactNode {
     const id = args.id ?? useId();
 
     return(<base.Root
+                value={args.value}
                 defaultValue={args.values?.default}
                 onValueChange={e => args.onChange && e ? args.onChange(e) : undefined}
                 min={args.values?.min}
