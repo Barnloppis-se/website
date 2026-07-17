@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider, useTheme } from "@mui/material/styles";
 import { ReactNode } from "react";
 import DBContext from "../db/db";
 import ApplicationNavigator from "./Navigator";
+import Cookies from "./cookies/Cookies";
 
 /**
  * Application theme
@@ -34,9 +35,11 @@ export default function Application({ children } : { children: ReactNode }): Rea
                     { route: "/items", label: "Bilder" },
                     { route: "/policy", label: "Policy" }
                 ]}>
-                    <DBContext url={process.env.NEXT_PUBLIC_BACKEND}>
-                        {children}
-                    </DBContext>
+                    <Cookies>
+                        <DBContext url={process.env.NEXT_PUBLIC_BACKEND}>
+                            {children}
+                        </DBContext>
+                    </Cookies>
                 </ApplicationNavigator>
             </ThemeProvider>
         </AppRouterCacheProvider>
