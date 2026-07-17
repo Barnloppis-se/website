@@ -20,9 +20,9 @@ interface Props {
  */
 export default function ItemDisplay(props: Props): ReactNode {
     return(
-        <Grid container columns={4} columnSpacing={4} rowSpacing={3} className="mb-12">
+        <Grid container columns={{ sm: 3, md: 3, lg: 4 }} columnSpacing={4} rowSpacing={3} className="mb-12">
             {props.items?.map(item => <Grid key={item.id} size={1}>
-                <Card className="max-w-96">
+                <Card className="max-w-96 min-w-56">
                     <CardActionArea>
                         <CardMedia
                             className="h-60"
