@@ -31,7 +31,8 @@ export default function Application({ children } : { children: ReactNode }): Rea
             <ThemeProvider theme={theme}>
                 <ApplicationNavigator routes={[
                     { route: "/", label: "Hem" },
-                    { route: "/items", label: "Bilder" }
+                    { route: "/items", label: "Bilder" },
+                    { route: "/policy", label: "Policy" }
                 ]}>
                     <DBContext url={process.env.NEXT_PUBLIC_BACKEND}>
                         {children}
