@@ -1,6 +1,7 @@
 "use client"
 import { useNavigator } from "@/components/app/Navigator";
 import ItemForm from "@/components/ui/form/ItemForms";
+import LoadingIndicator from "@/components/ui/popup/LoadingIndicator";
 import Popup from "@/components/ui/popup/Popup";
 import { upload, uploadImage } from "@barnloppis-se/api";
 import imageCompression, { Options } from "browser-image-compression";
@@ -21,6 +22,7 @@ export default function Home() {
         canClose: true,
         show: false,
     });
+    const [ load, setLoad ] = useState(false);
 
     return (
         <div className="w-full flex flex-wrap">
@@ -36,6 +38,7 @@ export default function Home() {
                     });
                 }}
                 onSubmit={async (item, images) => {
+                    setLoad(true);
                     const res = await upload(item);
                     if(res.status === false) {
                         setPopup(setPopupError(
@@ -46,6 +49,7 @@ export default function Home() {
                                 Ha en trevligt fortsatt dag och hoppas problemet inte kvarstår!
                             </>
                         ));
+                        setLoad(false);
                         return false;
                     }
 
@@ -64,6 +68,7 @@ export default function Home() {
                                 godkänt format. Ha en trevligt fortsatt dag och hoppas att problemet inte kvarstår!
                             </>
                         ));
+                        setLoad(false);
                         return false;
                     }
 
@@ -80,6 +85,7 @@ export default function Home() {
                         error: false,
                         show: true
                     });
+                    setLoad(false);
                     return true;
                 }}
             />
@@ -99,6 +105,7 @@ export default function Home() {
                 show={popup.show}
                 type={popup.error ? "error" : "standard"}
             />
+            {load && <LoadingIndicator label="Laddar upp artiklar" />}
         </div>
     );
 }
