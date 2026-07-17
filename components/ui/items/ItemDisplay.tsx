@@ -3,6 +3,7 @@ import { ItemObject } from "@barnloppis-se/types/dist/src/data/item";
 import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import ItemDisplayTopControls from "./ItemDisplayTopControls";
+import ItemDisplayPageControls from "./ItemDisplayPageControls";
 
 /**
  * Display props
@@ -24,6 +25,14 @@ interface Props {
          * display area.
          */
         readonly top?: ReactNode
+
+        /**
+         * Bottom slot nodes
+         *
+         * This will be placed under
+         * the display area.
+         */
+        readonly bottom?: ReactNode
     }
 }
 
@@ -34,7 +43,7 @@ interface Props {
  */
 export default function ItemDisplay(props: Props): ReactNode {
     return(
-        <Box>
+        <Box className="w-full">
             {props.slots?.top}
 
             <Grid container columns={{ sm: 3, md: 3, lg: 4 }} columnSpacing={4} rowSpacing={3} className="mb-12">
@@ -65,6 +74,8 @@ export default function ItemDisplay(props: Props): ReactNode {
                     </Card>
                 </Grid>)}
             </Grid>
+
+            {props.slots?.bottom}
         </Box>
     );
 }
@@ -75,3 +86,8 @@ export default function ItemDisplay(props: Props): ReactNode {
  * Item display top controls
  */
 ItemDisplay.TopControls = ItemDisplayTopControls;
+
+/**
+ * Item display page controls
+ */
+ItemDisplay.PageControls = ItemDisplayPageControls;

@@ -22,35 +22,46 @@ const defaults = {
  */
 export default function Items() {
     const [ items, setItems ] = useState<ItemObject[]>([]);
+    const [ state, set ] = useState({
+        controls: defaults,
+        amount: 0,
+        page: 0
+    });
 
-    const [ max, setMax ] = useState(50);
-    const [ first, setFirst ] = useState(0);
-
-
-
-    const apply = async (state: typeof defaults) => {
+    const apply = async (a: typeof defaults, b: number) => {
         // Start load
 
-        const res = await getItems("*", first, state.show, state.sort, state.seller);
+        const res = await getItems("*", b * a.show, a.show, a.sort, a.seller);
         if(res.status === true) {
-            setItems(res.data.items.slice(first, first + state.show));
-            setMax(res.data.size);
+            setItems(res.data.items.slice(0, a.show));
+            set({ controls: a, amount: res.data.size, page: b });
 
         } else { console.log(res); }
 
         // End load
     }
 
-    useEffect(() => { apply(defaults) }, []);
+    useEffect(() => { apply(defaults, 0) }, []);
 
     return(
-        <Box className="m-12">
+        <Box className="m-12 w-full">
             <ItemDisplay items={items} slots={{
-                top: <ItemDisplay.TopControls defaults={defaults} onChange={apply}/>
+                top: <ItemDisplay.TopControls defaults={defaults} onChange={e => apply(e, 0)}/>,
+                bottom: <ItemDisplay.PageControls
+                    disable={{
+                        previous: state.page <= 0,
+                        next: (state.page + 1) * state.controls.show >= state.amount
+                    }}
+                    onChange={e => {
+                        const delta = e === "prev" ? -1 : 1;
+                        apply(state.controls, state.page + delta);
+                    }}
+                >
+                    Sida <span className="font-bold font-mono">[{state.page + 1} / {Math.ceil(state.amount / state.controls.show)}]</span>
+                    <br />
+                    <span className="font-bold font-mono">{state.amount}</span> artiklar.
+                </ItemDisplay.PageControls>
             }} />
-
-
-            {/* Page selector */}
         </Box>
     );
 }
