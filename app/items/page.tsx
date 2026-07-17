@@ -1,5 +1,6 @@
 "use client"
 import ItemDisplay from "@/components/ui/items/ItemDisplay";
+import LoadingIndicator from "@/components/ui/popup/LoadingIndicator";
 import { getItems } from "@barnloppis-se/api";
 import { ItemObject } from "@barnloppis-se/types/dist/src/data/item";
 import { DBSearch } from "@barnloppis-se/types/dist/src/upload/uploadData";
@@ -21,6 +22,7 @@ const defaults = {
  * Images page
  */
 export default function Items() {
+    const [ load, setLoad ] = useState(false);
     const [ items, setItems ] = useState<ItemObject[]>([]);
     const [ state, set ] = useState({
         controls: defaults,
@@ -29,7 +31,7 @@ export default function Items() {
     });
 
     const apply = async (a: typeof defaults, b: number) => {
-        // Start load
+        setLoad(true);
 
         const res = await getItems("*", b * a.show, a.show, a.sort, a.seller);
         if(res.status === true) {
@@ -38,7 +40,7 @@ export default function Items() {
 
         } else { console.log(res); }
 
-        // End load
+        setLoad(false);
     }
 
     useEffect(() => { apply(defaults, 0) }, []);
@@ -62,6 +64,7 @@ export default function Items() {
                     <span className="font-bold font-mono">{state.amount}</span> artiklar.
                 </ItemDisplay.PageControls>
             }} />
+            {load && <LoadingIndicator label="Laddar" />}
         </Box>
     );
 }
