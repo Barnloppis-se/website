@@ -48,6 +48,9 @@ export default function Items() {
             <ItemDisplay items={items} slots={{
                 top: <ItemDisplay.TopControls defaults={defaults} onChange={apply}/>
             }} />
+
+
+            {/* Page selector */}
         </Box>
     );
 }

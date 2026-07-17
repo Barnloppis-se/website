@@ -115,20 +115,20 @@ export default function ItemDisplayTopControls(props: Props): ReactNode {
                             methodToLabel("seller")
                         ]}
                         default={methodToLabel(defaults.sort)}
-                        onSelect={value => {
-                            const n = state;
-                            n.sort = labelToMethod(value);
-                            set(n);
-                        }}
+                        onSelect={value => set({
+                            show: state.show,
+                            sort: labelToMethod(value),
+                            seller: state.seller
+                        })}
                     />
                 </div>
                 <NumberField
                     label="Antal plagg"
-                    onChange={value => {
-                        const n = state;
-                        n.show = value;
-                        set(n);
-                    }}
+                    onChange={value => set({
+                        show: value,
+                        sort: state.sort,
+                        seller: state.seller
+                    })}
                     values={{ default: props.defaults?.show, min: 1 }}
                     size="medium"
                 />
@@ -150,22 +150,28 @@ export default function ItemDisplayTopControls(props: Props): ReactNode {
             {state.sort === "seller" && <div className="flex ml-2">
                 <NumberField
                     label="Säljare"
-                    onChange={value => {
-                        const n = state;
-                        n.seller.value = value;
-                        n.seller.use = value;
-                        set(n);
-                    }}
+                    onChange={value => set({
+                        show: state.show,
+                        sort: state.sort,
+                        seller: {
+                            value: value,
+                            use: value
+                        }
+                    })}
                     values={{ default: defaults.seller.value, min: 1 }}
                     size="medium"
                 />
                 <FormGroup className="mt-8 ml-4">
                     <FormControlLabel control={<Checkbox checked={state.seller.use === "*"} />} label="Alla" onClick={e => {
                         e.preventDefault();
-
-                        const n = state;
-                        n.seller.use = state.seller.use === "*" ? state.seller.value : "*";
-                        set(n);
+                        set({
+                            show: state.show,
+                            sort: state.sort,
+                            seller: {
+                                value: state.seller.value,
+                                use: state.seller.use === "*" ? state.seller.value : "*"
+                            }
+                        });
                     }} />
                 </FormGroup>
             </div>}
