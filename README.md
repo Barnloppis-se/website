@@ -2,7 +2,7 @@
 
 | Description       | Commands          |
 | ----------------- | ----------------- |
-| See if it build   | `npm run build`   |
+| Test build        | `npm run build`   |
 | Run dev           | `npm run dev`     |
 
 
