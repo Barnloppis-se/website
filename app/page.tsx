@@ -5,7 +5,7 @@ import LoadingIndicator from "@/components/ui/popup/LoadingIndicator";
 import Popup from "@/components/ui/popup/Popup";
 import { upload, uploadImage } from "@barnloppis-se/api";
 import imageCompression, { Options } from "browser-image-compression";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 
 export default function Home() {
     const navigator = useNavigator();
@@ -23,8 +23,6 @@ export default function Home() {
         show: false,
     });
     const [ load, setLoad ] = useState(false);
-
-    useEffect(() => console.log(process.env.NEXT_PUBLIC_BACKEND), []);
 
     return (
         <div className="w-full flex flex-wrap">
