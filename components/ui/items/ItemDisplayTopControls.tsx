@@ -101,6 +101,9 @@ export default function ItemDisplayTopControls(props: Props): ReactNode {
                 <div className="mt-4 mr-4">
                     <Dropdown
                         values={[
+                            methodToLabel("date"),
+                            methodToLabel("oldest"),
+                            methodToLabel("seller"),
                             methodToLabel("Ej barn / ungdom"),
                             methodToLabel("Ej tillåten"),
                             methodToLabel("Fel säsong"),
@@ -110,9 +113,6 @@ export default function ItemDisplayTopControls(props: Props): ReactNode {
                             methodToLabel("Omärkt"),
                             methodToLabel("Slitet"),
                             methodToLabel("Trasig"),
-                            methodToLabel("date"),
-                            methodToLabel("oldest"),
-                            methodToLabel("seller")
                         ]}
                         default={methodToLabel(defaults.sort)}
                         onSelect={value => set({
