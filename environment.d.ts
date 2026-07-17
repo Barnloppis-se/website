@@ -4,7 +4,7 @@ declare global {
             /**
              * Barnloppis server backend URL
              */
-            readonly BACKEND: string
+            readonly NEXT_PUBLIC_BACKEND: string
         }
     }
 }
