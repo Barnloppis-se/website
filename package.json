@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@barnloppis-se/api": "^1.0.8",
+    "@barnloppis-se/api": "^1.0.9",
     "@barnloppis-se/types": "^1.0.0",
     "@base-ui/react": "^1.6.0",
     "@emotion/cache": "^11.14.0",
