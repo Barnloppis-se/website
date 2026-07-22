@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 const defaults = {
     show: 50,
     sort: "date" as DBSearch,
-    seller: "*" as number | "*"
+    seller: 1 as number | "*"
 }
 
 
@@ -46,7 +46,7 @@ export default function Items() {
     useEffect(() => { apply(defaults, 0) }, []);
 
     return(
-        <Box className="m-12 w-full">
+        <Box className="md:m-12 w-full">
             <ItemDisplay items={items} slots={{
                 top: <ItemDisplay.TopControls defaults={defaults} onChange={e => apply(e, 0)}/>,
                 bottom: <ItemDisplay.PageControls

@@ -96,8 +96,8 @@ export default function ItemDisplayTopControls(props: Props): ReactNode {
     }
 
     return(
-        <Box className="mb-12 pb-2 border-b-2 border-solid border-b-gray-500">
-            <div className="flex">
+        <Box className="mt-4 md:mt-0 mb-12 pb-2 border-b-2 border-solid border-b-gray-500">
+            <div className="flex flex-wrap md:flex-nowrap">
                 <div className="mt-4 mr-4">
                     <Dropdown
                         values={[
@@ -121,60 +121,63 @@ export default function ItemDisplayTopControls(props: Props): ReactNode {
                             seller: state.seller
                         })}
                     />
+                    {state.sort === "seller" && <div className="flex ml-4 md:ml-2">
+                        <NumberField
+                            label="Säljare"
+                            onChange={value => set({
+                                show: state.show,
+                                sort: state.sort,
+                                seller: {
+                                    value: value,
+                                    use: value
+                                }
+                            })}
+                            values={{ default: defaults.seller.value, min: 1 }}
+                            size="medium"
+                        />
+                        <FormGroup className="mt-8 ml-4">
+                            <FormControlLabel control={<Checkbox checked={state.seller.use === "*"} />} label="Alla" onClick={e => {
+                                e.preventDefault();
+                                set({
+                                    show: state.show,
+                                    sort: state.sort,
+                                    seller: {
+                                        value: state.seller.value,
+                                        use: state.seller.use === "*" ? state.seller.value : "*"
+                                    }
+                                });
+                            }} />
+                        </FormGroup>
+                    </div>}
                 </div>
-                <NumberField
-                    label="Antal plagg"
-                    onChange={value => set({
-                        show: value,
-                        sort: state.sort,
-                        seller: state.seller
-                    })}
-                    values={{ default: props.defaults?.show, min: 1 }}
-                    size="medium"
-                />
+                <div className="flex h-fit pb-4">
+                    <div className="w-full ml-4 mt-4 md:w-fit md:ml-0 md:mt-0">
+                        <NumberField
+                            label="Antal plagg"
+                            onChange={value => set({
+                                show: value,
+                                sort: state.sort,
+                                seller: state.seller
+                            })}
+                            values={{ default: props.defaults?.show, min: 1 }}
+                            size="medium"
+                        />
+                    </div>
+                    <div className="ml-8 h-fit mt-auto mb-2">
+                        <Button variant="outlined" color="success" size="medium" className="h-10" onClick={e => {
+                            e.preventDefault();
 
-                <div className="ml-14 h-fit mt-8">
-                    <Button variant="outlined" color="success" size="medium" className="h-10" onClick={e => {
-                        e.preventDefault();
-
-                        if(props.onChange) props.onChange({
-                            show: state.show,
-                            sort: state.sort,
-                            seller: state.seller.use
-                        });
-                    }}>
-                        Tillämpa
-                    </Button>
+                            if(props.onChange) props.onChange({
+                                show: state.show,
+                                sort: state.sort,
+                                seller: state.seller.use
+                            });
+                        }}>
+                            Tillämpa
+                        </Button>
+                    </div>
                 </div>
             </div>
-            {state.sort === "seller" && <div className="flex ml-2">
-                <NumberField
-                    label="Säljare"
-                    onChange={value => set({
-                        show: state.show,
-                        sort: state.sort,
-                        seller: {
-                            value: value,
-                            use: value
-                        }
-                    })}
-                    values={{ default: defaults.seller.value, min: 1 }}
-                    size="medium"
-                />
-                <FormGroup className="mt-8 ml-4">
-                    <FormControlLabel control={<Checkbox checked={state.seller.use === "*"} />} label="Alla" onClick={e => {
-                        e.preventDefault();
-                        set({
-                            show: state.show,
-                            sort: state.sort,
-                            seller: {
-                                value: state.seller.value,
-                                use: state.seller.use === "*" ? state.seller.value : "*"
-                            }
-                        });
-                    }} />
-                </FormGroup>
-            </div>}
         </Box>
     );
 }

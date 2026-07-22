@@ -18,7 +18,7 @@ export default function Policy(): ReactNode {
     }, []);
 
     return(
-        <Box className="m-12">
+        <Box className="w-4/5 wrap-break-word my-12 mx-auto">
             <MuiMarkdown>{markdown}</MuiMarkdown>
         </Box>
     );

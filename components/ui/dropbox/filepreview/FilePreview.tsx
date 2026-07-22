@@ -1,8 +1,7 @@
-import { Box, ImageList, ImageListItem } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import { Component, ContextType, createContext, ReactNode, RefAttributes, useContext } from "react";
 import FilePreviewControls, { FilePreviewControlProps } from "./FilePreviewControls";
 import Dropbox, { DropboxProps } from "../Dropbox";
-import { Delete } from "@mui/icons-material";
 
 /**
  * File preview properties
@@ -45,7 +44,7 @@ interface State {
     /**
      * File object hovering status
      */
-    readonly hovers: {[id: number]: boolean}
+    readonly selected: File[]
 }
 
 
@@ -76,7 +75,7 @@ export default class FilePreview extends Component<Props, State> {
 
 
 
-    static contextType = createContext<State>({ files: [], hovers: [] });
+    static contextType = createContext<State>({ files: [], selected: [] });
     context!: ContextType<typeof FilePreview.contextType>;
 
     /**
@@ -84,7 +83,7 @@ export default class FilePreview extends Component<Props, State> {
      */
     state: Readonly<State> = {
         files: [],
-        hovers: [],
+        selected: [],
     }
 
 
@@ -93,36 +92,24 @@ export default class FilePreview extends Component<Props, State> {
         <FilePreview.contextType.Provider value={this.state}>
             <Box className="w-full h-fit">{this.props.children}</Box>
             <Box className="flex w-full h-fit pt-3">
-                <ImageList className="w-4/5 h-fit min-h-36 m-auto overflow-y-visible" variant="masonry" cols={3} gap={8}>
-                    {this.state.files.map(file => <ImageListItem key={this.state.files.indexOf(file)}>
-                        <div className="flex size-full"
-                            onMouseOver={e => {
-                                e.preventDefault();
-                                this.hover(file);
-                            }}
-                            onMouseOut={e => {
-                                e.preventDefault();
-                                this.stopHover(file);
-                            }}
-                            onClick={e => {
-                                e.preventDefault();
-                                if(this.isHovering(file)) this.remove(file);
-                            }}
-                        >
-                            <img
-                                src={URL.createObjectURL(file)}
-                                alt={`${file.webkitRelativePath}/${file.name}`}
-                                loading="lazy"
-                                className={this.isHovering(file) ? "blur-sm" : ""}
-                            />
-                            {this.isHovering(file) && <div className="absolute flex size-full">
-                                <div className="size-fit m-auto">
-                                    <Delete className="size-16" color="error" fontSize="large" />
-                                </div>
-                            </div>}
-                        </div>
-                    </ImageListItem>)}
-                </ImageList>
+
+                <Grid container columns={{ sm: 4, md: 12 }} rowSpacing={1} columnSpacing={2}>
+                    {this.state.files.map(file => <Grid key={this.state.files.indexOf(file)} size={{ sm: 2, md: 4 }}>
+                        <Button onClick={e => {
+                            e.preventDefault();
+                            this.select(file);
+                        }}>
+                            <div className={`${this.isSelected(file) ? "border-8 border-solid border-blue-100" : ""}`}>
+                                <img
+                                    src={URL.createObjectURL(file)}
+                                    alt={`${file.webkitRelativePath}/${file.name}`}
+                                    loading="lazy"
+                                    className="size-full rounded-xs"
+                                />
+                            </div>
+                        </Button>
+                    </Grid>)}
+                </Grid>
             </Box>
         </FilePreview.contextType.Provider>
     </Box>);
@@ -130,41 +117,47 @@ export default class FilePreview extends Component<Props, State> {
 
 
     /**
-     * Updates hover status over file object
+     * Marks or un-marks file from selections
      *
-     * @param file File to hover
+     * If the file is selected then this
+     * will unselect that file else this
+     * will select the file.
+     *
+     * @param file File to select
      */
-    public hover = (file: File) => {
-        const hover = this.state.hovers;
-        hover[this.state.files.indexOf(file)] = true;
+    public select = (file: File) => {
+        const selected = this.state.selected;
+        if(this.isSelected(file)) selected.splice(selected.indexOf(file), 1);
+        else selected.push(file);
 
         this.setState(prev => ({
             files: prev.files,
-            hovers: hover,
-        }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
+            selected: selected
+        }), this.OnChange);
     }
 
     /**
-     * Checks if currently hovering over set file
+     * Checks if file is currently being selected
      *
      * @param file File to check
-     * @returns Hovering status
+     * @returns Status of file selection
      */
-    public isHovering = (file: File) => this.state.hovers[this.state.files.indexOf(file)];
+    public isSelected = (file: File) => this.state.selected.indexOf(file) !== -1;
 
     /**
-     * Stops hover over file object
-     *
-     * @param file File to stop hover over
+     * Removes all the selected files
+     * from this state.
      */
-    public stopHover = (file: File) => {
-        const hover = this.state.hovers;
-        hover[this.state.files.indexOf(file)] = false;
+    public removeSelected = () => {
+        const files =  this.state.files;
+        for(const file of this.state.selected) {
+            files.splice(files.indexOf(file), 1);
+        }
 
-        this.setState(prev => ({
-            files: prev.files,
-            hovers: hover,
-        }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
+        this.setState(({
+            files: files,
+            selected: []
+        }), this.OnChange);
     }
 
     /**
@@ -176,8 +169,8 @@ export default class FilePreview extends Component<Props, State> {
     public add = (files: File[]) => {
         this.setState(prev => ({
             files: [...prev.files, ...files],
-            hovers: [],
-        }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
+            selected: [],
+        }), this.OnChange);
     }
 
     /**
@@ -189,8 +182,8 @@ export default class FilePreview extends Component<Props, State> {
     public remove = (file: File) => {
         this.setState(prev => ({
             files: prev.files.toSpliced(prev.files.indexOf(file), 1),
-            hovers: [],
-        }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
+            selected: [],
+        }), this.OnChange);
     }
 
     /**
@@ -206,8 +199,19 @@ export default class FilePreview extends Component<Props, State> {
     public reset = () => {
         this.setState(prev => ({
             files: [],
-            hovers: [],
-        }), () => {if(this.props.onChange) this.props.onChange(this.state.files)});
+            selected: [],
+        }), this.OnChange);
+    }
+
+
+
+    /**
+     * Handles `on change` event
+     */
+    private OnChange = () => {
+        if(this.props.onChange) {
+            this.props.onChange(this.state.files);
+        }
     }
 }
 

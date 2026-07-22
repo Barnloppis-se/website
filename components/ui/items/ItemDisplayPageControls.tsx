@@ -49,7 +49,7 @@ export default function ItemDisplayPageControls(props: Props): ReactNode {
                 e.preventDefault();
                 if(props.onChange) props.onChange("prev");
             }}>Föregående</Button>
-            <Typography className="my-auto mx-14 text-center">{props.children}</Typography>
+            <Typography className="my-auto mx-8 md:mx-14 text-center">{props.children}</Typography>
             <Button variant="outlined" disabled={props.disable?.next} className="my-auto" onClick={e => {
                 e.preventDefault();
                 if(props.onChange) props.onChange("next");
