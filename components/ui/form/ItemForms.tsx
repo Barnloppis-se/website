@@ -58,8 +58,8 @@ export default function ItemForm(props: Props): ReactNode {
     const filePreview = useRef<FilePreview>(null);
 
     return(<FormControl className={props.className}>
-        <Box className="flex h-fit ml-32">
-            <div className="mt-4 mr-12">
+        <Box className="flex flex-wrap md:flex-nowrap h-fit md:ml-32">
+            <div className="mt-4 mx-auto md:mx-0 md:mr-12">
                 <Dropdown<keyof typeof TAGS>
                     label="Välj fel"
                     onSelect={onTag}
@@ -67,7 +67,7 @@ export default function ItemForm(props: Props): ReactNode {
                     values={tags as (keyof typeof TAGS)[]}
                 />
             </div>
-            {tag != "Omärkt" && <div className="w-fit h-fit">
+            {tag != "Omärkt" && <div className="w-fit h-fit mx-auto md:mx-0">
                 <NumberField
                     label="Säljare"
                     size="medium"
@@ -94,7 +94,7 @@ export default function ItemForm(props: Props): ReactNode {
         <Box className="w-4/5 flex m-auto mt-3 border-solid border-t-2 border-bs-neutral-500">
             <Box className="w-fit h-fit m-auto my-7">
                 <Button
-                    className="min-w-2xs"
+                    className="md:min-w-2xs"
                     variant="outlined"
                     size="large"
                     onClick={e => {

@@ -20,19 +20,30 @@ export interface FilePreviewControlProps {
  */
 export default function FilePreviewControls(props: FilePreviewControlProps) : ReactNode {
     const preview = useFilePreview();
-    const [ disabled, setDisabled ] = useState(false);
+    const [ all, setAll ] = useState(false);
+    const [ sel, setSel ] = useState(false);
 
     useEffect(() => {
-        setDisabled(preview.files.length === 0);
+        setAll(preview.files.length === 0);
+        setSel(preview.selected.length === 0);
     }, [preview]);
 
     return(<Box className="m-1.5">
         <Button
+            className="mr-2"
             onClick={e => {
                 e.preventDefault();
                 if(props.ref?.current) props.ref?.current.reset();
             }}
-            disabled={disabled}
+            disabled={all}
             variant="outlined" color="error">Rensa</Button>
+        <Button
+            className="ml-2"
+            onClick={e => {
+                e.preventDefault();
+                if(props.ref?.current) props.ref.current.removeSelected();
+            }}
+            disabled={sel}
+            variant="outlined" color="warning">Ta bort</Button>
     </Box>);
 }
