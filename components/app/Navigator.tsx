@@ -58,7 +58,7 @@ export default function ApplicationNavigator(props: Props): ReactNode {
         <div className="size-full">
             <AppBar position="static">
                 <Toolbar variant="dense">
-                    <Image src={"/Logo - Barnloppis.png"} alt="Barnloppis Logo" loading="lazy" width={64} height={64} className="rounded-full mx-4 my-3" />
+                    <Image src={"/Logo - Barnloppis.png"} alt="Barnloppis Logo" loading="eager" width={64} height={64} className="rounded-full mx-4 my-3" />
                     <Typography variant="h5" noWrap component="a" className="mr-4 font-mono text-inherit font-bold hover:cursor-pointer" sx={{ display: { xs: 'none', md: 'flex' }, letterSpacing: '.1rem', textDecoration: 'none' }} onClick={e => {
                             e.preventDefault();
                             setLocation("/");
