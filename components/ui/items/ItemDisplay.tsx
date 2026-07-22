@@ -47,8 +47,8 @@ export default function ItemDisplay(props: Props): ReactNode {
             {props.slots?.top}
 
             <Grid container columns={{ sm: 3, md: 3, lg: 4 }} columnSpacing={4} rowSpacing={3} className="mb-12">
-                {props.items?.map(item => <Grid key={item.id} size={1}>
-                    <Card className="max-w-96 min-w-56">
+                {props.items?.map(item => <Grid key={item.id} size={1} className="mx-auto md:mx-0">
+                    <Card className="min-w-96 max-w-96 md:min-w-56">
                         <CardActionArea>
                             <CardMedia
                                 className="h-60"
