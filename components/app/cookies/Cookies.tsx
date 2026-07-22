@@ -31,11 +31,11 @@ export default function Cookies({ children } : { children?: ReactNode }): ReactN
                     </Typography>
                 </div>
                 <div className="my-auto">
-                    <Button className="min-w-36 mx-5" variant="outlined" color="error" onClick={e => {
+                    <Button className="mb-4 md:mb-0 md:min-w-36 mx-5" variant="outlined" color="error" onClick={e => {
                         e.preventDefault();
                         setShow(false);
                     }}>Neka</Button>
-                    <Button className="min-w-36 mx-5" variant="outlined" color="primary" onClick={e => {
+                    <Button className="md:min-w-36 mx-5" variant="outlined" color="primary" onClick={e => {
                         e.preventDefault();
                         localStorage.setItem("accepted-cookies", "accept");
                         setShow(false);
