@@ -31,19 +31,19 @@ export default function Application({ children } : { children: ReactNode }): Rea
     return(
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
             <ThemeProvider theme={theme}>
-                <ApplicationNavigator routes={[
-                    { route: "/", label: "Hem" },
-                    { route: "/items", label: "Bilder" },
-                    { route: "/policy", label: "Policy" }
-                ]}>
-                    <Cookies>
-                        <DBContext url={process.env.NEXT_PUBLIC_BACKEND}>
-                            <AuthProvider>
+                <DBContext url={process.env.NEXT_PUBLIC_BACKEND}>
+                    <AuthProvider>
+                        <ApplicationNavigator routes={[
+                            { route: "/", label: "Hem" },
+                            { route: "/items", label: "Bilder" },
+                            { route: "/policy", label: "Policy" }
+                        ]}>
+                            <Cookies>
                                 {children}
-                            </AuthProvider>
-                        </DBContext>
-                    </Cookies>
-                </ApplicationNavigator>
+                            </Cookies>
+                        </ApplicationNavigator>
+                    </AuthProvider>
+                </DBContext>
             </ThemeProvider>
         </AppRouterCacheProvider>
     );
