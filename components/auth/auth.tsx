@@ -1,3 +1,4 @@
+"use client"
 import { Auth, User } from "@barnloppis-se/api/auth";
 import { Account } from "@barnloppis-se/types/dist/src/data/account";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
@@ -16,7 +17,7 @@ type State = {
      *
      * @param account Account details
      */
-    readonly login: (account: Account) => Promise<void>
+    readonly login: (account: Account) => Promise<User | undefined>
 
     /**
      * Logs out of currently logged in account
@@ -39,8 +40,13 @@ export default function AuthProvider({ children }: { children: ReactNode }): Rea
 
     const login = async (account: Account) => {
         const res = await Auth.login(account);
-        if(res.status === false) setState({ user: null, login, logout });
-        else setState({ user: { token: res.user!.token }, login, logout });
+        if(res.status === false) {
+            setState({ user: null, login, logout });
+            return;
+        } else {
+            setState({ user: { token: res.user!.token }, login, logout });
+            return res.user;
+        }
     }
 
     const logout = () => {

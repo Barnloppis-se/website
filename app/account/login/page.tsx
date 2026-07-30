@@ -24,8 +24,8 @@ export default function Login(): ReactNode {
             <form className="m-auto bg-blue-50 px-8 py-12 rounded-sm" onSubmit={e => {
                 e.preventDefault();
                 setLoad(true);
-                auth.login({ email, password }).then(_ => {
-                    if(auth.user) navigator.navigate("/");
+                auth.login({ email, password }).then(user => {
+                    if(user) navigator.navigate("/");
                     else setError("Kunde inte logga in");
                     setLoad(false);
                 })
