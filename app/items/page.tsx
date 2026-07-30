@@ -59,7 +59,7 @@ export default function Items() {
                         apply(state.controls, state.page + delta);
                     }}
                 >
-                    Sida <span className="font-bold font-mono">[{state.page + 1} / {Math.ceil(state.amount / state.controls.show)}]</span>
+                    Sida <span className="font-bold font-mono">[{state.page + 1} / {Math.max(1, Math.ceil(state.amount / state.controls.show))}]</span>
                     <br />
                     <span className="font-bold font-mono">{state.amount}</span> artiklar.
                 </ItemDisplay.PageControls>
