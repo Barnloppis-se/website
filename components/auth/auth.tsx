@@ -16,34 +16,45 @@ type State = {
      *
      * @param account Account details
      */
-    readonly login?: (account: Account) => Promise<void>
+    readonly login: (account: Account) => Promise<void>
 
     /**
      * Logs out of currently logged in account
      */
-    readonly logout?: () => void
+    readonly logout: () => void
 }
 
 /**
  * Authentication context
  */
-const context = createContext<State>({})
+const context = createContext<State>({ login: async (a) => {}, logout: () => {} });
 
 
 
+/**
+ * Authentication provider
+ */
 export default function AuthProvider({ children }: { children: ReactNode }): ReactNode {
-    const [ state, setState ] = useState<State>({})
+    const [ state, setState ] = useState<State>({ login: async (a) => {}, logout: () => {} });
 
     const login = async (account: Account) => {
-        const res = await Auth.login(account)
+        const res = await Auth.login(account);
+        if(res.status === false) setState({ user: null, login, logout });
+        else setState({ user: { token: res.user!.token }, login, logout });
+    }
+
+    const logout = () => {
+        Auth.logout();
+        setState({ user: null, login, logout });
     }
 
     useEffect(() => {
         Auth.init()
+        setState({ user: Auth.getUser(), login, logout });
     }, []);
 
     return(
-        <context.Provider value={{}}>
+        <context.Provider value={state}>
             {children}
         </context.Provider>
     );
@@ -57,4 +68,4 @@ export default function AuthProvider({ children }: { children: ReactNode }): Rea
  *
  * @returns Authentication context object
  */
-export const useAuth = () => useContext(context)
+export const useAuth = () => useContext(context);
