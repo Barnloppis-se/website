@@ -55,7 +55,7 @@ export default function Popup(props: Props): ReactNode {
                 <Typography variant="h3" color={props.type === "error" ? "error" : "textPrimary"} className="w-4/5 h-fit pb-2 px-6 mt-12 m-auto border-solid border-b-2 capitalize font-mono font-semibold border-b-gray-700 text-3xl md:text-5xl">
                     {props.title}
                 </Typography>
-                <Typography className="w-11/12 md:w-4/5 px-8 my-12 md:m-auto text-gray-700">
+                <Typography className="w-11/12 pt-5 md:w-4/5 px-8 my-12 md:m-auto text-gray-700">
                     {props.message}
                 </Typography>
             </Box>
