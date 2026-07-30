@@ -1,10 +1,11 @@
 "use client"
+import { useAuth } from "@/components/auth/auth";
 import ItemDisplay from "@/components/ui/items/ItemDisplay";
 import LoadingIndicator from "@/components/ui/popup/LoadingIndicator";
-import { getItems } from "@barnloppis-se/api";
+import { deleteItems, getItems } from "@barnloppis-se/api";
 import { ItemObject } from "@barnloppis-se/types/dist/src/data/item";
 import { DBSearch } from "@barnloppis-se/types/dist/src/upload/uploadData";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 
 /**
@@ -22,6 +23,8 @@ const defaults = {
  * Images page
  */
 export default function Items() {
+    const auth = useAuth();
+
     const [ load, setLoad ] = useState(false);
     const [ items, setItems ] = useState<ItemObject[]>([]);
     const [ state, set ] = useState({
@@ -48,7 +51,24 @@ export default function Items() {
     return(
         <Box className="md:m-12 w-full">
             <ItemDisplay items={items} slots={{
-                top: <ItemDisplay.TopControls defaults={defaults} onChange={e => apply(e, 0)}/>,
+                top: <ItemDisplay.TopControls
+                    defaults={defaults}
+                    onChange={e => apply(e, 0)}
+                    slots={{
+                        bottom: <div>
+                            {auth.user && <Box className="pl-5 pt-8 pb-3">
+                                <Button variant="outlined" color="error" onClick={e => {
+                                    e.preventDefault();
+                                    setLoad(true);
+                                    deleteItems("*").then(_ => {
+                                        apply(defaults, 0);
+                                        setLoad(false);
+                                    });
+                                }}>Ta bort alla</Button>
+                            </Box>}
+                        </div>
+                    }}
+                />,
                 bottom: <ItemDisplay.PageControls
                     disable={{
                         previous: state.page <= 0,
@@ -64,7 +84,7 @@ export default function Items() {
                     <span className="font-bold font-mono">{state.amount}</span> artiklar.
                 </ItemDisplay.PageControls>
             }} />
-            {load && <LoadingIndicator label="Laddar" />}
+            {load && <LoadingIndicator label="Laddar..." />}
         </Box>
     );
 }
