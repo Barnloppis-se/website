@@ -1,4 +1,4 @@
-import { Auth } from "@barnloppis-se/api/auth";
+import { Auth, User } from "@barnloppis-se/api/auth";
 import { Account } from "@barnloppis-se/types/dist/src/data/account";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
@@ -9,21 +9,7 @@ type State = {
     /**
      * User object
      */
-    user?: {
-        /**
-         * Account access token
-         */
-        token: {
-            /**
-             * Token value
-             */
-            value: string,
-            /**
-             * Token expire date
-             */
-            expires: Date
-        }
-    }
+    readonly user?: User
 
     /**
      * Logs in to account
@@ -50,8 +36,6 @@ export default function AuthProvider({ children }: { children: ReactNode }): Rea
 
     const login = async (account: Account) => {
         const res = await Auth.login(account)
-        {
-        }
     }
 
     useEffect(() => {
