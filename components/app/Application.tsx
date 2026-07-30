@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 import DBContext from "../db/db";
 import ApplicationNavigator from "./Navigator";
 import Cookies from "./cookies/Cookies";
+import AuthProvider from "../auth/auth";
 
 /**
  * Application theme
@@ -37,7 +38,9 @@ export default function Application({ children } : { children: ReactNode }): Rea
                 ]}>
                     <Cookies>
                         <DBContext url={process.env.NEXT_PUBLIC_BACKEND}>
-                            {children}
+                            <AuthProvider>
+                                {children}
+                            </AuthProvider>
                         </DBContext>
                     </Cookies>
                 </ApplicationNavigator>
