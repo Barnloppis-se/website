@@ -2,6 +2,7 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import Image from "next/image";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { useAuth } from "../auth/auth";
 
 /**
  * Navigator context
@@ -43,6 +44,7 @@ interface Props {
  * Application navigation provider
  */
 export default function ApplicationNavigator(props: Props): ReactNode {
+    const auth = useAuth();
     const [ state, setState ] = useState("");
 
     useEffect(() => {
@@ -75,6 +77,15 @@ export default function ApplicationNavigator(props: Props): ReactNode {
                             </Typography>
                         </Button>)}
                     </Box>}
+                    <Box className="absolute left-auto right-5 hidden md:block">
+                        <Button color="inherit" onClick={e => {
+                            e.preventDefault();
+                            if(auth.user) auth.logout();
+                            else setLocation("/account/login");
+                        }}>
+                            {auth.user ? "Logga ut" : "Logga in"}
+                        </Button>
+                    </Box>
                 </Toolbar>
             </AppBar>
             <context.Provider value={{ state, navigate: setLocation }}>

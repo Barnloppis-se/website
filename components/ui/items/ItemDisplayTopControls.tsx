@@ -62,6 +62,19 @@ interface Props {
          */
         seller: number | "*"
     }) => Promise<void> | void;
+
+    /**
+     * Component slots
+     */
+    readonly slots?: {
+        /**
+         * Bottom slot
+         *
+         * This can be used to add
+         * authentication controls
+         */
+        readonly bottom?: ReactNode
+    }
 }
 
 
@@ -178,6 +191,7 @@ export default function ItemDisplayTopControls(props: Props): ReactNode {
                     </div>
                 </div>
             </div>
+            {props.slots?.bottom}
         </Box>
     );
 }
